@@ -32,28 +32,61 @@ class _MyHomePageState extends State<MyHomePage> {
   TimeOfDay secilenSaat = TimeOfDay.fromDateTime(DateTime.now());
   //String formattedDate = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
 
-
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
   }
   int isStopped=0;
+
+  Timer? _timer;
+  String greeting='';
+
   intFormat(){
     DateTime secilenTarih = DateTime.now();
     //var f = new NumberFormat("###.00#", "en_US");
     var f = new NumberFormat("00");
     //print(f.format(1));
     //String time5=secilenSaat.minute.toString();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    /*Timer.periodic(Duration(seconds: 1), (timerW) {
       DateTime secilenTarih = DateTime.now();
-      if (isStopped<3) {
+      if (isStopped<=25) {
         int time1=secilenTarih.second;
         String timex= f.format(time1);
         print(timex);
-        //timer.cancel();
+        isStopped++;
+      }else{
+        timerW.cancel();
+      }
+      if(timerW.isActive){
+        print('timerW is active');
+      }
+      if(timerW){
+        print('timerW is active');
+      }
+    });*/
+    Timer.run(() => print('hi!'));
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      print('secand');
+      if(isStopped==5){
+        timer.cancel();
+      }
+      isStopped++;
+    });
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+       greeting = "After Some time ${DateTime.now().second}";
+      });
+      if(DateTime.now().second==15){
+        timer.cancel();
       }
     });
+
+    var today = new DateTime.now();
+    print(today);
+    var fiftyDaysFromNow = today.add(new Duration(seconds: 360));
+    print(fiftyDaysFromNow);
   }
 
   @override
@@ -87,13 +120,21 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 100.0),
             ),
             Text(secilenSaat.minute.toString(),style: TextStyle(fontSize: 30.0),),
+            SizedBox(height: 50.0,),
+            Text(greeting),
+            ElevatedButton(
+                onPressed:(){
+                  _timer!.cancel();
+                },
+                child: Text('Stop'),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           setState(() {
-            _incrementCounter();
+            //_incrementCounter();
           });
         },
         tooltip: 'Increment',
